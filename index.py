@@ -37,10 +37,13 @@ print(avg_flights)
 count = -1
 for user in users:
     count += 1
-    if user.get('friends'):
-        for friend in user['friends']:
-            if friend.get('flights'):
-                # print(friend['flights']['country'])
-                for flight in friend['flights']:
+    friends = user.get('friends', [])
+    if len(friends) > 0:
+        for friend in friends:
+            flights = friend.get('flights', [])
+            if len(flights) > 0:
+                for flight in flights:
                     if flight['country'] in countries:
-                        users.pop(count)
+                        del users[count]
+                    break
+            break
