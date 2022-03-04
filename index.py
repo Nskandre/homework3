@@ -1,6 +1,6 @@
 from dataset import users, countries
 
-users_wrong_password = [{user.get('name'): user.get('mail')} for user in users 
+users_wrong_password = [{'name': user.get('name'), 'mail': user.get('mail')} for user in users 
     if user.get('password').isdigit()]
 
 print(users_wrong_password)
