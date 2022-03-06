@@ -20,7 +20,7 @@ for user in users:
             if friend['job']['salary'] > max_salary:
                 max_salary = friend['job']['salary']
                 best_occupation = friend['job']
-            if friend.get('flights'):
+            if friend.get('flights', []) and friend.get('cars', []):
                 list_flights.append(len(friend.get('flights')))
         if sum_salary > max_sum_salary:
             max_sum_salary = sum_salary
@@ -34,16 +34,18 @@ avg_flights = round(sum(list_flights) / len(list_flights), 5)
 
 print(avg_flights)
 
-count = -1
-for user in users:
-    count += 1
+print(len(users))
+print(countries)
+copy_users = users.copy()
+for user in copy_users:
     friends = user.get('friends', [])
-    if len(friends) > 0:
+    if friends:
         for friend in friends:
             flights = friend.get('flights', [])
-            if len(flights) > 0:
+            if flights:
                 for flight in flights:
                     if flight['country'] in countries:
-                        del users[count]
+                        users.remove(user)
                     break
             break
+print(len(users))
