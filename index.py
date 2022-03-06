@@ -34,8 +34,6 @@ avg_flights = round(sum(list_flights) / len(list_flights), 5)
 
 print(avg_flights)
 
-print(len(users))
-print(countries)
 copy_users = users.copy()
 for user in copy_users:
     friends = user.get('friends', [])
@@ -48,4 +46,3 @@ for user in copy_users:
                         users.remove(user)
                     break
             break
-print(len(users))
