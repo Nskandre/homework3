@@ -1,48 +1,70 @@
 from dataset import users, countries
 
-users_wrong_password = [{'name': user.get('name'), 'mail': user.get('mail')} for user in users 
-    if user.get('password').isdigit()]
-
-print(users_wrong_password)
-
-girls_drivers = []
-max_salary = 0
-max_sum_salary = 0
-list_flights = []
+users_wrong_password = []
 
 for user in users:
-    sum_salary = 0
-    if user.get('friends'):
-        for friend in user['friends']:
-            sum_salary += friend['job']['salary']
-            if friend.get('cars') and friend.get('sex') == 'F':
-                girls_drivers.append(friend['name'])
-            if friend['job']['salary'] > max_salary:
-                max_salary = friend['job']['salary']
-                best_occupation = friend['job']
-            if friend.get('flights', []) and friend.get('cars', []):
-                list_flights.append(len(friend.get('flights')))
-        if sum_salary > max_sum_salary:
-            max_sum_salary = sum_salary
-            vip_user = user['name']
+    if user['password'].isdigit():
+        users_wrong_password.append({'name': user['name'], 'mail': user['mail']})
+        print(*users_wrong_password)
 
-print(girls_drivers)
-print(best_occupation)
-print(vip_user)
-
-avg_flights = round(sum(list_flights) / len(list_flights), 5)
-
-print(avg_flights)
-
-copy_users = users.copy()
-for user in copy_users:
+girls_drivers = []
+for user in users:
     friends = user.get('friends', [])
-    if friends:
-        for friend in friends:
-            flights = friend.get('flights', [])
-            if flights:
-                for flight in flights:
-                    if flight['country'] in countries:
-                        users.remove(user)
-                    break
+    for friend in friends:
+        if friend['sex'] == 'F' and friend.get('cars', None):
+            girls_drivers.append(friend['name'])
+            print(*girls_drivers)       
+            
+best_occupation = {}
+max_salary = 0
+for user in users:
+    friends = user.get('friends', [])
+    for friend in friends:
+        if friend['job']['salary'] > max_salary:
+            max_salary = friend['job']['salary']
+            best_occupation = friend['job']
+            print(best_occupation)
+
+max_salary = 0
+
+for user in users:
+    total_salary = 0
+    friends = user.get('friends', [])
+    for friend in friends:
+        total_salary += friend['job']['salary']
+    
+    if total_salary > max_salary:
+        max_salary = total_salary
+        vip_user = user['name']
+        print(vip_user)
+        print(max_salary)
+
+total = 0
+cars = 0
+
+for user in users:
+    friends = user.get('friends', [])
+    for friend in friends:
+        if friend.get('cars'):
+            cars += 1
+            total += len(friend.get('flights', []))
+avg_flights = round(total / cars, 5)
+print(avg_flights) 
+
+clean_users = 0  
+
+while clean_users < len(users):
+    removed = False
+    friends = users[clean_users].get('friends', [])
+    for friend in friends:
+        flights = friend.get('flights', [])
+        for flight in flights:
+            if flight['country'] in countries:
+                removed = True
+                break
+        if removed:
             break
+    if removed:
+        del users[clean_users]
+    else:
+        clean_users += 1
